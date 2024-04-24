@@ -61,7 +61,7 @@ jobs:
       id: fa
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME_DEV }}
-        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        package: '.'
         publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
 
   deploy-to-prod:
