@@ -8,7 +8,7 @@ on:
   workflow_dispatch:  # This is for the manual trigger 
 
 env:
-  AZURE_FUNCTIONAPP_NAME_DEV: 'func-reporting-demo'   # set this to your DEV function app name on Azure
+  AZURE_FUNCTIONAPP_NAME_DEV: 'test-app-o1'   # set this to your DEV function app name on Azure
   AZURE_FUNCTIONAPP_NAME_PROD: ''   # set this to your PROD function app name on Azure
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'LocalFunctionProj'       # set this to the path to your function app project, defaults to the repository root
   DOTNET_VERSION: '8.0.x'                   # set this to the dotnet version to use (e.g. '2.1.x', '3.1.x', '5.0.x')
