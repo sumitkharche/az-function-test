@@ -17,7 +17,7 @@ namespace Company.Function
 
         [Function(nameof(ServiceBusQueueTrigger1))]
         public async Task Run(
-            [ServiceBusTrigger("reporting", Connection = "ServiceBusConnection")]
+            [ServiceBusTrigger("testq1", Connection = "ServiceBusConnection")]
             ServiceBusReceivedMessage message,
             ServiceBusMessageActions messageActions)
         {
