@@ -1,4 +1,4 @@
-using func_reporting_demo;
+using LocalFunctionProj;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,14 +9,8 @@ var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureServices(services =>
     {
-        var configurationSettings = new ConfigurationSettings();
-        var configurations = Environment.GetEnvironmentVariables();
-        JObject obj = JObject.FromObject(configurations);
-        configurationSettings = obj.ToObject<ConfigurationSettings>();
-
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
-        services.AddSingleton(configurationSettings);
     })
     .ConfigureLogging(logging =>
     {
