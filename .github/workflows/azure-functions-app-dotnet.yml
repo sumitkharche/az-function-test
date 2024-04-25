@@ -47,7 +47,7 @@ jobs:
    runs-on: windows-latest # For Linux, use ubuntu-latest
    environment: DEV
    needs: build
-   if: github.ref == 'refs/heads/develop'
+   if: github.ref == 'refs/heads/main'
    steps:
     # Download published artifact
     - name: Download a Build Artifact
