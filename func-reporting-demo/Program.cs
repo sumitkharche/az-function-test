@@ -9,14 +9,8 @@ var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureServices(services =>
     {
-        var configurationSettings = new ConfigurationSettings();
-        var configurations = Environment.GetEnvironmentVariables();
-        JObject obj = JObject.FromObject(configurations);
-        configurationSettings = obj.ToObject<ConfigurationSettings>();
-
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
-        services.AddSingleton(configurationSettings);
     })
     .ConfigureLogging(logging =>
     {
