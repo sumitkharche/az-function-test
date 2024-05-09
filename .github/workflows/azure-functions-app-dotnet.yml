@@ -5,7 +5,11 @@
 name: Deploy Azure Function App
 
 on:
-  workflow_dispatch:  # This is for the manual trigger 
+  workflow_dispatch:  # This is for the manual trigger
+    inputs:
+      job-name:
+        description: 'Job id'
+        required: true
 
 env:
   AZURE_FUNCTIONAPP_NAME_DEV: 'reporting-func-demo'   # set this to your DEV function app name on Azure
