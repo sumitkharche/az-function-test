@@ -17,7 +17,7 @@ namespace func_reporting_demo
 
         [Function(nameof(ProcessReportingEmailFunction))]
         public async Task Run(
-            [ServiceBusTrigger("reporting", Connection = "ServiceBusConnection")]
+            [ServiceBusTrigger("%ServiceBusQueueName%", Connection = "ServiceBusConnection")]
             ServiceBusReceivedMessage message,
             ServiceBusMessageActions messageActions)
         {
