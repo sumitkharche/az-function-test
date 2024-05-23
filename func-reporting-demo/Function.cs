@@ -18,6 +18,7 @@ namespace func_reporting_demo
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation($"Body: {req.Body}");
             bool isMockAPIEnabled = Convert.ToBoolean(Environment.GetEnvironmentVariable("EnableMockAPI"));
             return new OkObjectResult($"Welcome to Azure Functions! isMockAPIEnabled:{isMockAPIEnabled}");
         }
