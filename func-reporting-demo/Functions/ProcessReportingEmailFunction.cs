@@ -39,7 +39,7 @@ namespace func_reporting_demo
             {
                 _logger.LogInformation("Calling Mock API");
                 _logger.LogInformation($"Delay Satrted - {DateTime.Now}");
-                await Task.Delay(TimeSpan.FromSeconds(60));
+                //await Task.Delay(TimeSpan.FromSeconds(60));
                 _logger.LogInformation($"Delay complete - {DateTime.Now}");
                 await ProcessMockAPI(reportingRequest);
             }
