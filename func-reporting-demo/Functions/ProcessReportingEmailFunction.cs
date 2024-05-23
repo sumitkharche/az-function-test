@@ -38,6 +38,9 @@ namespace func_reporting_demo
             if (isMockAPIEnabled)
             {
                 _logger.LogInformation("Calling Mock API");
+                _logger.LogInformation($"Delay Satrted - {DateTime.Now}");
+                await Task.Delay(TimeSpan.FromMinutes(1));
+                _logger.LogInformation($"Delay complete - {DateTime.Now}");
                 await ProcessMockAPI(reportingRequest);
             }
             else
