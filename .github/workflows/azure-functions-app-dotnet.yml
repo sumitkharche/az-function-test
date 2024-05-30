@@ -58,7 +58,7 @@ jobs:
    runs-on: ubuntu-latest # For Linux, use ubuntu-latest
    environment: DEV
    needs: build
-   if: github.ref == 'refs/heads/main' && ${{ inputs.env }} == 'DEV'
+   if: ${{ github.ref == 'refs/heads/main' &&  inputs.env  == 'DEV' }}
    steps:
     # Download published artifact
     - name: Download a Build Artifact
