@@ -96,29 +96,5 @@ namespace func_reporting_demo
 
 
         }
-
-        //private static GraphServiceClient GetGraphClient()
-        //{
-
-        //    var scopes = new[] { "https://graph.microsoft.com/.default" };
-
-        //    // Values from app registration
-        //    var clientId = "01a2a325-0ef1-4012-afd9-e9a6a1623082";
-        //    var tenantId = "49e76321-588d-4dfd-a4fa-6ae4204e10f7";
-        //    var clientSecret = "PU98Q~UOT6JM4XOnnv-GjkMQY8tJw_ouEBNG1bHM";
-
-        //    // using Azure.Identity;
-        //    var options = new ClientSecretCredentialOptions
-        //    {
-        //        AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
-        //    };
-
-        //    var clientSecretCredential = new ClientSecretCredential(
-        //        tenantId, clientId, clientSecret, options);
-
-        //    var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
-
-        //    return graphClient;
-        //}
     }
 }
