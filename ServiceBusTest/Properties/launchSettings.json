@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ServiceBusTest": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7077",
+      "launchBrowser": false
+    }
+  }
+}
