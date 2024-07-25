@@ -52,7 +52,7 @@ jobs:
       uses: actions/upload-artifact@v4.3.1
       with:
         name: function-app
-        path: ./func-reporting-demo/output
+        path: ./ServiceBusTest/output
 
   deploy-to-dev:
    runs-on: ubuntu-latest # For Linux, use ubuntu-latest
