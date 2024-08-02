@@ -12,7 +12,7 @@ on:
 jobs:
   blazemeter_test:
     runs-on: ubuntu-latest
-    
+    environment: DEV
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
       env:
         BLAZEMETER_API_KEY_SECRET: ${{ secrets.BLAZEMETER_API_KEY_SECRET }}
       run: |
-        curl -X POST https://a.blazemeter.com/api/v4/tests/YOUR_TEST_ID/start \
+        curl -X POST https://a.blazemeter.com/api/v4/tests/14293525/start \
         -H "x-api-key: $BLAZEMETER_API_KEY_SECRET" \
         -H "Content-Type: application/json" \
         -d '{"configuration": {"plugins": []}}'
@@ -33,7 +33,7 @@ jobs:
       env:
         BLAZEMETER_API_KEY_SECRET: ${{ secrets.BLAZEMETER_API_KEY_SECRET }}
       run: |
-        TEST_STATUS=$(curl -X GET https://a.blazemeter.com/api/v4/tests/YOUR_TEST_ID/reports \
+        TEST_STATUS=$(curl -X GET https://a.blazemeter.com/api/v4/tests/14293525/reports \
         -H "x-api-key: $BLAZEMETER_API_KEY_SECRET" \
         | jq -r '.data[0].status')
         
@@ -46,7 +46,7 @@ jobs:
       env:
         BLAZEMETER_API_KEY_SECRET: ${{ secrets.BLAZEMETER_API_KEY_SECRET }}
       run: |
-        REPORT_URL=$(curl -X GET https://a.blazemeter.com/api/v4/tests/YOUR_TEST_ID/reports \
+        REPORT_URL=$(curl -X GET https://a.blazemeter.com/api/v4/tests/14293525/reports \
         -H "x-api-key: $BLAZEMETER_API_KEY_SECRET" \
         | jq -r '.data[0].publicReportUrl')
         
