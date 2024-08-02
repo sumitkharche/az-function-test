@@ -21,8 +21,8 @@ jobs:
       env:
         BLAZEMETER_API_KEY_SECRET: ${{ secrets.BLAZEMETER_API_KEY_SECRET }}
       run: |
-        curl -X POST https://a.blazemeter.com/api/v4/tests/14293525/start \
-        -H "x-api-key: $BLAZEMETER_API_KEY_SECRET" \
+        curl -X POST https://a.blazemeter.com/api/v4/tests/14293525/start?delayedStart=false \
+        --user '$BLAZEMETER_API_KEY_SECRET' \
         -H "Content-Type: application/json" \
         -d '{"configuration": {"plugins": []}}'
         
@@ -34,7 +34,7 @@ jobs:
         BLAZEMETER_API_KEY_SECRET: ${{ secrets.BLAZEMETER_API_KEY_SECRET }}
       run: |
         TEST_STATUS=$(curl -X GET https://a.blazemeter.com/api/v4/tests/14293525/reports \
-        -H "x-api-key: $BLAZEMETER_API_KEY_SECRET" \
+        --user '$BLAZEMETER_API_KEY_SECRET' \
         | jq -r '.data[0].status')
         
         if [ "$TEST_STATUS" != "ENDED" ]; then
@@ -47,7 +47,7 @@ jobs:
         BLAZEMETER_API_KEY_SECRET: ${{ secrets.BLAZEMETER_API_KEY_SECRET }}
       run: |
         REPORT_URL=$(curl -X GET https://a.blazemeter.com/api/v4/tests/14293525/reports \
-        -H "x-api-key: $BLAZEMETER_API_KEY_SECRET" \
+        --user '$BLAZEMETER_API_KEY_SECRET' \
         | jq -r '.data[0].publicReportUrl')
         
         echo "Test Report URL: $REPORT_URL"
