@@ -44,7 +44,7 @@ jobs:
     - name: powershell
       shell: pwsh
       run: |
-        		$results = Get-Content -Path results
-        		echo "::set-output name=results::$results"
+        $results = Get-Content -Path results
+        echo "::set-output name=results::$results"
 
        
