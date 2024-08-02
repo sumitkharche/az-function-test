@@ -41,5 +41,10 @@ jobs:
        testID: ${{env.testID}} 
        continuePipeline: ${{env.continuePipeline}} 
        showTailLog: ${{env.showTailLog}}
+    - name: powershell
+      shell: pwsh
+      run: |
+        		$results = Get-Content -Path results
+        		echo "::set-output name=results::$results"
 
        
