@@ -18,6 +18,14 @@ on:
         required: true
         # The data type of the input
         type: string
+      performanceTesting:
+        description: 'Run Performance Tests:'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 env:
   API_KEY: '4557e1b28ae7d2512ae4dc71'   
   API_SECRET: '2cc18ca5bc436147dee36b5d421555988a85f0fcd2c4df228ee3800750ec461abbdfd4e2'  
