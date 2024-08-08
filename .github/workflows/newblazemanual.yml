@@ -37,6 +37,9 @@ jobs:
   # This workflow contains a single job called "greet"
   Blazemeter:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        testID: [14293525, 14305736]
     steps:
     # Checkout
     - name: 'Checkout'
@@ -46,13 +49,8 @@ jobs:
       with:
        apiKey: ${{env.API_KEY}} 
        apiSecret: ${{env.API_SECRET}} 
-       testID: ${{env.testID}} 
+       testID: ${{ matrix.testID}} 
        continuePipeline: ${{env.continuePipeline}} 
        showTailLog: ${{env.showTailLog}}
-    - name: powershell
-      shell: pwsh
-      run: |
-        $results = Get-Content -Path results
-        echo "::set-output name=results::$results"
 
        
