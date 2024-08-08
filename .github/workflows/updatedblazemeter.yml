@@ -1,1 +1,56 @@
+# This is a basic workflow that is manually triggered
 
+name: Updated Blazemeter Manual workflow1
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      name:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Person to greet'
+        # Default value if no value is explicitly provided
+        default: 'World'
+        # Input has to be provided for the workflow to run
+        required: true
+        # The data type of the input
+        type: string
+      performanceTesting:
+        description: 'Run Performance Tests:'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+env:
+  API_KEY: '4557e1b28ae7d2512ae4dc71'   
+  API_SECRET: '2cc18ca5bc436147dee36b5d421555988a85f0fcd2c4df228ee3800750ec461abbdfd4e2'  
+  testID: '14293525'       # set this to the path to your function app project, defaults to the repository root
+  continuePipeline: 'false'
+  showTailLog: 'true'
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "greet"
+  Blazemeter:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        testID: [14293525, 14305736]
+    steps:
+    # Checkout
+    - name: 'Checkout'
+      uses: actions/checkout@v2.3.4
+    - name: Run Blazemeter test
+      uses: BlazeRunner-BZR/Github-Action@v8.1
+      with:
+       apiKey: ${{env.API_KEY}} 
+       apiSecret: ${{env.API_SECRET}} 
+       testID: ${{ matrix.testID}} 
+       continuePipeline: ${{env.continuePipeline}} 
+       showTailLog: ${{env.showTailLog}}
+
+       
