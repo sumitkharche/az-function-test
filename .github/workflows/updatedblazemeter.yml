@@ -38,7 +38,7 @@ jobs:
   Blazemeter:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 1
+      max-parallel: 0
       matrix:
         testID: [14293525, 14305736]
     steps:
