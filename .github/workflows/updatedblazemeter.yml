@@ -38,9 +38,9 @@ jobs:
   Blazemeter:
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 1
       matrix:
         testID: [14293525, 14305736]
-      max-parallel: 1
     steps:
     # Checkout
     - name: 'Checkout'
