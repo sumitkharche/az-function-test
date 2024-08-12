@@ -29,20 +29,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        testID:[]
+        testID:${{ fromJson(steps.set_test_ids.outputs.testIDs) }}
       max-parallel: 1  # Still use this to attempt sequential execution
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2.3.4
-      - name: 'Determine test cases to run'
-        id: determine_tests
+      - name: 'Determine Test IDs'
+        id: set_test_ids
         run: |
-            testIDs="${{ github.event.inputs.specificTestCases }}"
-            echo "testIDs=[$(echo $testIDs | sed 's/, /, /g')]" >> $GITHUB_ENV
-
-      - name: 'Set matrix with test case IDs'
-        run: echo "::set-output name=testMatrix::${{ env.testIDs }}"
-        id: set_matrix
+            # Convert the specificTestCases input to an array
+            specificTestCases="${{ github.event.inputs.specificTestCases }}"
+            cleaned_ids=$(echo $specificTestCases | tr -d '[] ')
+            IFS=',' read -ra test_case_array <<< "$cleaned_ids"
+            # Convert array to JSON format
+            testIDs=$(printf '%s\n' "${test_case_array[@]}" | jq -R . | jq -s .)
+            echo "::set-output name=testIDs::${testIDs}"
 
       - name: 'Update matrix strategy'
         uses: actions/github-script@v6
