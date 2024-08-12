@@ -39,7 +39,7 @@ jobs:
           # Replace commas with JSON array format
           json_array=$(echo "$test_case_string" | sed 's/,/,/g' | sed 's/^/[ /; s/$/ ]/' | sed 's/ //g')
           echo "Formatted JSON array: $json_array" # Debugging output
-          echo "testIDs=$json_array" >> "$GITHUB_OUTPUT"
+          echo "testIDs=$json_array" >> "$GITHUB_ENV"
   print_test_ids:
     name: Print Test IDs
     runs-on: ubuntu-latest
@@ -48,8 +48,8 @@ jobs:
       - name: Print Test IDs
         run: |
           echo "Test IDs from the previous job:"
-          echo "${{ fromJson(needs.Build_testcases_parameter.outputs.testIDs) }}"
-          echo "${{ needs.Build_testcases_parameter.outputs.testIDs }}"
+          echo "${{ fromJson(env.testIDs) }}"
+          echo "${{ env.testIDs }}"
   performance_testing_specific:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'specific'}}
     name: Specific
@@ -58,7 +58,7 @@ jobs:
     strategy:
       max-parallel: 1 # Ensures tests run sequentially
       matrix:
-        testID: ${{needs.Build_testcases_parameter.outputs.testIDs}}
+        testID: ${{ fromJson(env.testIDs) }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2.3.4         
