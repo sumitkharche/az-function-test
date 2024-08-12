@@ -49,7 +49,6 @@ jobs:
         run: |
           echo "Test IDs from the previous job:"
           echo "${{ fromJson(needs.Build_testcases_parameter.outputs.testIDs) }}"
-          echo "${{ needs.Build_testcases_parameter.outputs.testIDs }}"
   performance_testing_specific:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'specific'}}
     name: Specific
