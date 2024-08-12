@@ -78,7 +78,7 @@ jobs:
         run: |
           test_ids=$(jq '[.performanceTests[].id | tonumber]' testcases.json)
           echo "Extracted Test IDs: $test_ids"
-          echo "testIDs=test_ids" >> $GITHUB_OUTPUT
+          echo "testIDs=$test_ids" >> $GITHUB_OUTPUT
   print_test_ids_all:
     name: Print Test IDs all
     runs-on: ubuntu-latest
@@ -88,7 +88,6 @@ jobs:
         run: |
           echo "Test IDs from the previous job:"
           echo "${{ fromJson(needs.Build_testcases_parameter_all.outputs.testIDs) }}"
-          echo "${{ needs.Build_testcases_parameter_all.outputs.testIDs }}"
   performance_testing_all:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'all1'}}  
     name: All
