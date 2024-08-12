@@ -45,10 +45,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: Build_testcases_parameter
     steps:
-      - name: Print Test IDs
+      - name: Print Test IDs11
         run: |
           echo "Test IDs from the previous job:"
-          echo "${{ fromJson(needs.Build_testcases_parameter.outputs.testIDs) }}"
           echo "${{ needs.Build_testcases_parameter.outputs.testIDs }}"
   performance_testing_specific:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'specific'}}
