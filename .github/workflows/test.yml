@@ -85,7 +85,7 @@ jobs:
       - name: 'Read test case IDs from JSON'
         id: read_json
         run: |
-          test_ids=$(jq '[.performanceTests[].id | tonumber]' testcases.json)     
+          test_ids=$(jq '[.performanceTests[].id]' testcases.json)     
           echo "Extracted Test IDs: $test_ids"
           echo "testIDs=test_ids" >> $GITHUB_OUTPUT
   print_test_ids_all:
