@@ -85,8 +85,9 @@ jobs:
       - name: 'Read test case IDs from JSON'
         id: read_json
         run: |
-          testIDs=$(jq -r '.performanceTests[].id' testcases.json)
-          echo "testIDs=[$(echo $testIDs | sed 's/ /, /g')]" >> $GITHUB_OUTPUT
+          test_ids=$(jq '[.performanceTests[].id | tonumber]' testcases.json)     
+          echo "Extracted Test IDs: $test_ids"
+          echo "testIDs=test_ids" >> $GITHUB_OUTPUT
   print_test_ids_all:
     name: Print Test IDs all
     runs-on: ubuntu-latest
