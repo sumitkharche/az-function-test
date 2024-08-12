@@ -36,7 +36,7 @@ jobs:
         id: set_test_ids
         run: |
             test_case_array=${{ github.event.inputs.specificTestCases }}
-            echo "::set-output name=testIDs::$test_case_array"
+            echo "testIDs=$test_case_array" >> $GITHUB_OUTPUT
   performance_testing_specific:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'specific'}}
     name: Specific
