@@ -26,6 +26,8 @@ jobs:
   Build_testcases_parameter:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'specific'}}
     name: Build parameter
+    outputs:
+      testIDs: ${{ steps.set_test_ids.outputs.testIDs }}
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
@@ -33,13 +35,8 @@ jobs:
       - name: 'Determine Test IDs'
         id: set_test_ids
         run: |
-            # Convert the specificTestCases input to an array
-            specificTestCases="${{ github.event.inputs.specificTestCases }}"
-            cleaned_ids=$(echo $specificTestCases | tr -d '[] ')
-            IFS=',' read -ra test_case_array <<< "$cleaned_ids"
-            # Convert array to a comma-separated string
-            testIDs=$(IFS=, ; echo "${test_case_array[*]}")
-            echo "testIDs=$testIDs" >> $GITHUB_ENV
+            test_case_array=${{ github.event.inputs.specificTestCases }}
+            echo "::set-output name=testIDs::$test_case_array"
   performance_testing_specific:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'specific'}}
     name: Specific
@@ -47,7 +44,7 @@ jobs:
     strategy:
       max-parallel: 1 # Ensures tests run sequentially
       matrix:
-        testID: ${{ fromJson(env.testIDs) }}    
+        testID:${{ fromJson(needs.calculate_test_ids.outputs.testIDs) }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2.3.4         
