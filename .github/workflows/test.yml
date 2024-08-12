@@ -2,13 +2,63 @@ name: Test
 
 on:
   workflow_dispatch:
+    inputs:
+      performanceTesting:
+        description: 'Run Performance Tests:'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      runSpecific:
+        description: 'Do you want to run specific test cases or all?'
+        required: false
+        type: choice
+        default: 'all'
+        options: 
+          - 'all'
+          - 'specific'
+      specificTestCases:
+        description: 'Enter specific test case IDs separated by commas (only used if "specific" is selected above)'
+        required: false
 jobs:
-  performance_testing:
-    name: Test
+  performance_testing_specific:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'specific'}}
+    name: Specific
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        testID: [1,2]
+        testID:[]
+      max-parallel: 1  # Still use this to attempt sequential execution
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2.3.4
+      - name: 'Determine test cases to run'
+        id: determine_tests
+        run: |
+            testIDs="${{ github.event.inputs.specificTestCases }}"
+            echo "testIDs=[$(echo $testIDs | sed 's/, /, /g')]" >> $GITHUB_ENV
+
+      - name: 'Set matrix with test case IDs'
+        run: echo "::set-output name=testMatrix::${{ env.testIDs }}"
+        id: set_matrix
+
+      - name: 'Update matrix strategy'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let testMatrix = JSON.parse(process.env.testMatrix);
+            return testMatrix.map(id => ({ testID: id }));            
+      - name: Wait before starting test
+        run: sleep 5 
+  performance_testing_all:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'all'}}  
+    name: All
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        testID: [1,2,3]
       max-parallel: 1  # Still use this to attempt sequential execution
     steps:
       - name: 'Checkout'
