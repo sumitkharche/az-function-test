@@ -38,7 +38,8 @@ jobs:
             test_case_string="${{ github.event.inputs.specificTestCases }}"
              # Replace commas with JSON array format
             json_array=$(echo "$test_case_string" | sed 's/,/","/g' | sed 's/^/["/; s/$/"]/')
-            echo "::set-output name=testIDs::$json_array"
+            echo "Formatted JSON array: $json_array" # Debugging output
+            echo "testIDs=$clean_test_case_array" >> "$GITHUB_OUTPUT"
   print_test_ids:
     name: Print Test IDs
     runs-on: ubuntu-latest
@@ -48,6 +49,7 @@ jobs:
         run: |
           echo "Test IDs from the previous job:"
           echo "${{ fromJson(needs.Build_testcases_parameter.outputs.testIDs) }}"
+          echo "${{ needs.Build_testcases_parameter.outputs.testIDs }}"
   performance_testing_specific:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'specific'}}
     name: Specific
