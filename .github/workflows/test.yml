@@ -6,7 +6,7 @@ on:
       performanceTesting:
         description: 'Run Performance Tests:'
         required: false
-        default: 'false'
+        default: 'true'
         type: choice
         options:
           - 'true'
@@ -15,7 +15,7 @@ on:
         description: 'Do you want to run specific test cases or all?'
         required: false
         type: choice
-        default: 'all'
+        default: 'specific'
         options: 
           - 'all'
           - 'specific'
@@ -35,10 +35,19 @@ jobs:
       - name: 'Determine Test IDs'
         id: set_test_ids
         run: |
-            test_case_array=${{ github.event.inputs.specificTestCases }}
-            clean_test_case_array=$(echo $test_case_array | tr -d ' ')
-            echo "testIDs=$clean_test_case_array" >> $GITHUB_ENV
-            echo "testIDs=$clean_test_case_array" >> $GITHUB_OUTPUT
+            test_case_string="${{ github.event.inputs.specificTestCases }}"
+             # Replace commas with JSON array format
+            json_array=$(echo "$test_case_string" | sed 's/,/","/g' | sed 's/^/["/; s/$/"]/')
+            echo "::set-output name=testIDs::$json_array"
+  print_test_ids:
+    name: Print Test IDs
+    runs-on: ubuntu-latest
+    needs: Build_testcases_parameter
+    steps:
+      - name: Print Test IDs
+        run: |
+          echo "Test IDs from the previous job:"
+          echo "${{ fromJson(needs.Build_testcases_parameter.outputs.testIDs) }}"
   performance_testing_specific:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'specific'}}
     name: Specific
