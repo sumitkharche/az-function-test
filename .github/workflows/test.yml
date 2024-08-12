@@ -69,23 +69,15 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'all'}}
     name: Build parameter all
     outputs:
-      testIDs: ${{ steps.set_test_ids.outputs.testIDs }}
+      testIDs: ${{ steps.read_json.outputs.testIDs }}
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2.3.4
-      - name: 'Determine Test IDs'
-        id: set_test_ids
-        run: |
-          test_case_string="${{ github.event.inputs.specificTestCases }}"
-          # Replace commas with JSON array format
-          json_array=$(echo "$test_case_string" | sed 's/,/,/g' | sed 's/^/[ /; s/$/ ]/' | sed 's/ //g')
-          echo "Formatted JSON array: $json_array" # Debugging output
-          echo "testIDs=$json_array" >> "$GITHUB_OUTPUT"
       - name: 'Read test case IDs from JSON'
         id: read_json
         run: |
-          test_ids=$(jq '[.performanceTests[].id]' testcases.json)     
+          test_ids=$(jq '[.performanceTests[].id | tonumber]' testcases.json)
           echo "Extracted Test IDs: $test_ids"
           echo "testIDs=test_ids" >> $GITHUB_OUTPUT
   print_test_ids_all:
