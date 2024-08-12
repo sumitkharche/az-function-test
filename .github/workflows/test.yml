@@ -15,7 +15,7 @@ on:
         description: 'Do you want to run specific test cases or all?'
         required: false
         type: choice
-        default: 'specific'
+        default: 'all'
         options: 
           - 'all'
           - 'specific'
@@ -64,14 +64,47 @@ jobs:
         uses: actions/checkout@v2.3.4         
       - name: Wait before starting test
         run: sleep 5 
-
+        
+  Build_testcases_parameter_all:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'all'}}
+    name: Build parameter all
+    outputs:
+      testIDs: ${{ steps.set_test_ids.outputs.testIDs }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2.3.4
+      - name: 'Determine Test IDs'
+        id: set_test_ids
+        run: |
+          test_case_string="${{ github.event.inputs.specificTestCases }}"
+          # Replace commas with JSON array format
+          json_array=$(echo "$test_case_string" | sed 's/,/,/g' | sed 's/^/[ /; s/$/ ]/' | sed 's/ //g')
+          echo "Formatted JSON array: $json_array" # Debugging output
+          echo "testIDs=$json_array" >> "$GITHUB_OUTPUT"
+      - name: 'Read test case IDs from JSON'
+        id: read_json
+        run: |
+          testIDs=$(jq -r '.performanceTests[].id' testcases.json)
+          echo "testIDs=[$(echo $testIDs | sed 's/ /, /g')]" >> $GITHUB_OUTPUT
+  print_test_ids_all:
+    name: Print Test IDs all
+    runs-on: ubuntu-latest
+    needs: Build_testcases_parameter_all
+    steps:
+      - name: Print Test IDs
+        run: |
+          echo "Test IDs from the previous job:"
+          echo "${{ fromJson(needs.Build_testcases_parameter_all.outputs.testIDs) }}"
+          echo "${{ needs.Build_testcases_parameter_all.outputs.testIDs }}"
   performance_testing_all:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'all'}}  
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'all1'}}  
     name: All
     runs-on: ubuntu-latest
+    needs: Build_testcases_parameter_all
     strategy:
       matrix:
-        testID: [1,2,3]
+        testID: [1,2]
       max-parallel: 1  # Still use this to attempt sequential execution
     steps:
       - name: 'Checkout'
