@@ -1,0 +1,8 @@
+{
+  "performanceTests": [
+    {"id": "testID1", "name": "Test Case 1"},
+    {"id": "testID2", "name": "Test Case 2"},
+    {"id": "testID3", "name": "Test Case 3"},
+    {"id": "testID4", "name": "Test Case 4"}
+  ]
+}
