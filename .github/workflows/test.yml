@@ -22,6 +22,13 @@ on:
       specificTestCases:
         description: 'Enter test case IDs separated by commas (e.g., 1,2,3) if "specific" is selected above.'
         required: false
+      executionMode:
+        description: 'Applicable only if "specific" test cases are selected. Choose "sequential" to run tests one at a time, or "concurrent" to run tests simultaneously.'
+        required: false
+        type: choice
+        options:
+          - 'sequential'
+          - 'concurrent'
 jobs:
   Build_testcases_parameter:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'specific'}}
@@ -55,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: Build_testcases_parameter
     strategy:
-      max-parallel: 1 # Ensures tests run sequentially
+      max-parallel: 1
       matrix:
         testID: ${{fromJson(needs.Build_testcases_parameter.outputs.testIDs)}}
     steps:
