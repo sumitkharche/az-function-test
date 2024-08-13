@@ -1,0 +1,29 @@
+name: Extract and Print Test Case IDs
+
+on:
+ workflow_dispatch:
+
+jobs:
+  extract-ids:
+    runs-on: ubuntu-latest
+    outputs:
+      ids: ${{ steps.extract.outputs.ids }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Read testcases.json and extract IDs
+        id: extract
+        run: |
+          # Extract IDs from the JSON file using jq
+          ids=$(jq '[.performanceTests[].id | tonumber]' testcases.json)
+          # Set the output for the job
+          echo "ids=$ids" >> $GITHUB_OUTPUT
+
+  print-ids:
+    runs-on: ubuntu-latest
+    needs: extract-ids
+    steps:
+      - name: Print extracted IDs
+        run: | 
+         echo "Extracted IDs: ${{ needs.extract-ids.outputs.ids }}"
