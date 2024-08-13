@@ -52,7 +52,8 @@ jobs:
             # Extract IDs from the JSON file using jq
             ids=$(jq -r '[.performanceTests[].id | tonumber] | join(",")' testcases.json)
             # Set the output for the job
-            echo "testIDs=[$ids]" >> $GITHUB_OUTPUT
+            echo "testIDs=[$ids]" >> "$GITHUB_OUTPUT"
+          fi
   print_test_ids:
     name: Print Test IDs
     runs-on: ubuntu-latest
