@@ -16,7 +16,7 @@ jobs:
         id: extract
         run: |
           # Extract IDs from the JSON file using jq
-          ids=$(jq '[.performanceTests[].id | tonumber]' testcases.json)
+          ids=$(jq -r '[.performanceTests[].id | tonumber] | join(",")' testcases.json)
           # Set the output for the job
           echo "ids=$ids" >> $GITHUB_OUTPUT
 
@@ -25,5 +25,4 @@ jobs:
     needs: extract-ids
     steps:
       - name: Print extracted IDs
-        run: | 
-         echo "Extracted IDs: ${{ needs.extract-ids.outputs.ids }}"
+        run: echo "Extracted IDs: [${{ needs.extract-ids.outputs.ids }}]"
