@@ -28,7 +28,6 @@ jobs:
         run: | 
           echo "Extracted IDs: ${{ needs.extract-ids.outputs.ids }}"
   performance_testing_all:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'all'}}  
     name: All
     runs-on: ubuntu-latest
     strategy:
