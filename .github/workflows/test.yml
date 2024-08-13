@@ -96,7 +96,7 @@ jobs:
     needs: Build_testcases_parameter_all
     strategy:
       matrix:
-        testID: ${{needs.Build_testcases_parameter_all.outputs.ids}}
+        testID: ${{fromJson(needs.Build_testcases_parameter_all.outputs.ids)}}
       max-parallel: 1  # Still use this to attempt sequential execution
     steps:
       - name: 'Checkout'
