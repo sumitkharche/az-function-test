@@ -68,17 +68,18 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'all'}}
     name: Build parameter all
     outputs:
-      testIDs: ${{ steps.read_json.outputs.testIDs }}
+      ids: ${{ steps.extract.outputs.ids }}
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2.3.4
-      - name: 'Read test case IDs from JSON'
-        id: read_json
+      - name: Read testcases.json and extract IDs
+        id: extract
         run: |
-          test_ids=$(jq '[.performanceTests[].id | tonumber]' testcases.json)
-          echo "Extracted Test IDs: $test_ids"
-          echo "testIDs=$test_ids" >> $GITHUB_OUTPUT
+          # Extract IDs from the JSON file using jq
+          ids=$(jq -r '[.performanceTests[].id | tonumber] | join(",")' testcases.json)
+          # Set the output for the job
+          echo "ids=$ids" >> $GITHUB_OUTPUT
 
   print_test_ids_all:
     name: Print Test IDs all
@@ -87,16 +88,15 @@ jobs:
     steps:
       - name: Print Test IDs
         run: |
-          echo "Test IDs from the previous job:"
-          echo "${{ needs.Build_testcases_parameter_all.outputs.testIDs }}"
+          echo "Extracted IDs: [${{ needs.Build_testcases_parameter_all.outputs.ids }}]"
   performance_testing_all:
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'all1'}}  
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true' && github.event.inputs.runSpecific == 'all'}}  
     name: All
     runs-on: ubuntu-latest
     needs: Build_testcases_parameter_all
     strategy:
       matrix:
-        testID: [1,2]
+        testID: ${{ needs.Build_testcases_parameter_all.outputs.ids }}
       max-parallel: 1  # Still use this to attempt sequential execution
     steps:
       - name: 'Checkout'
