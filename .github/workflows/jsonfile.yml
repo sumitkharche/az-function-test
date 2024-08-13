@@ -25,4 +25,5 @@ jobs:
     needs: extract-ids
     steps:
       - name: Print extracted IDs
-        run: echo "Extracted IDs: [${{ needs.extract-ids.outputs.ids }}]"
+        run: | 
+          echo "Extracted IDs: [${{ needs.extract-ids.outputs.ids }}]"
