@@ -4,15 +4,15 @@ on:
   workflow_dispatch:
     inputs:
       performanceTesting:
-        description: 'Run Performance Tests:'
+        description: 'Run performance tests: Choose "true" to run tests, "false" to skip.'
         required: false
-        default: 'true'
+        default: 'false'
         type: choice
         options:
           - 'true'
           - 'false'
       runSpecific:
-        description: 'Do you want to run specific test cases or all?'
+        description: 'Select "all" to run all tests or "specific" to run chosen tests.'
         required: false
         type: choice
         default: 'all'
@@ -20,7 +20,7 @@ on:
           - 'all'
           - 'specific'
       specificTestCases:
-        description: 'Enter specific test case IDs separated by commas (only used if "specific" is selected above)'
+        description: 'Enter test case IDs separated by commas (e.g., 1,2,3) if "specific" is selected above.'
         required: false
 jobs:
   Build_testcases_parameter:
