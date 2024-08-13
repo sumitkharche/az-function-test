@@ -78,7 +78,7 @@ jobs:
         run: |
           test_ids=$(jq '[.performanceTests[].id | tonumber]' testcases.json)
           echo "Extracted Test IDs: $test_ids"
-          echo "::set-output name=testIDs::$test_ids"
+          echo "testIDs=$test_ids" >> $GITHUB_OUTPUT
 
   print_test_ids_all:
     name: Print Test IDs all
