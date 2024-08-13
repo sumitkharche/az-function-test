@@ -1,0 +1,77 @@
+name: Final BlazeMeter
+
+on:
+  workflow_dispatch:
+    inputs:
+      performanceTesting:
+        description: 'Run performance tests: Choose "true" to run tests, "false" to skip.'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      runSpecific:
+        description: 'Select "all" to run all tests or "specific" to run chosen tests.'
+        required: false
+        type: choice
+        default: 'all'
+        options: 
+          - 'all'
+          - 'specific'
+      specificTestCases:
+        description: 'Enter test case IDs separated by commas (e.g., 1,2,3) if "specific" is selected above.'
+        required: false
+      executionMode:
+        description: 'Applicable only if "specific" test cases are selected. Choose "sequential" to run tests one at a time, or "concurrent" to run tests simultaneously.'
+        required: false
+        type: choice
+        options:
+          - 'sequential'
+          - 'concurrent'
+jobs:
+  Build_testcases_parameter:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true'}}
+    name: Build parameter
+    outputs:
+      testIDs: ${{ steps.set_test_ids.outputs.testIDs }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2.3.4
+      - name: 'Determine Test IDs'
+        id: set_test_ids
+        run: |
+          if [ -z "${{ github.event.inputs.specificTestCases }}" ]; then
+            test_case_string="${{ github.event.inputs.specificTestCases }}"
+            # Replace commas with JSON array format
+            json_array=$(echo "$test_case_string" | sed 's/,/,/g' | sed 's/^/[ /; s/$/ ]/' | sed 's/ //g')
+            echo "Formatted JSON array: $json_array" # Debugging output
+          else
+            ids=$(jq -r '[.performanceTests[].id | tonumber] | join(",")' testcases.json)
+            json_array = [$ids]
+          fi
+          echo "testIDs=$json_array" >> "$GITHUB_OUTPUT"
+  print_test_ids:
+    name: Print Test IDs
+    runs-on: ubuntu-latest
+    needs: Build_testcases_parameter
+    steps:
+      - name: Print Test IDs11
+        run: |
+          echo "Test IDs from the previous job:"
+          echo "${{ needs.Build_testcases_parameter.outputs.testIDs }}"
+  performance_testing:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.performanceTesting == 'true'}}
+    name: Specific Or All
+    runs-on: ubuntu-latest
+    needs: Build_testcases_parameter
+    strategy:
+      max-parallel: 1
+      matrix:
+        testID: ${{fromJson(needs.Build_testcases_parameter.outputs.testIDs)}}
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2.3.4         
+      - name: Wait before starting test ${{matrix.testID}}
+        run: sleep 5
