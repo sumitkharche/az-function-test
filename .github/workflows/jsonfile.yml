@@ -30,6 +30,8 @@ jobs:
   up-artifact:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
