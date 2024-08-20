@@ -16,9 +16,14 @@ on:
         required: false
         type: choice
         default: 'all'
-        options: 
-          - 'all'
-          - 'specific'
+        options:
+          - 'Pre-Order Functional'
+          - 'Order Functional'
+          - 'Post-Order Functional'
+          - 'All Functional'
+          - 'All OCC APIs'
+          - 'All OData APIs'
+          - 'Specific TestIDs'
       specificTestCases:
         description: 'Enter test case IDs separated by commas (e.g., 1,2,3) if "specific" is selected above.'
         required: false
@@ -42,16 +47,27 @@ jobs:
       - name: 'Determine Test IDs'
         id: set_test_ids
         run: |
-         if [ "${{ github.event.inputs.runSpecific }}" = "specific" ]; then
+          if [ "${{ github.event.inputs.runSpecific }}" = "Specific TestIDs" ]; then
             test_case_string="${{ github.event.inputs.specificTestCases }}"
-            # Replace commas with JSON array format
             json_array=$(echo "$test_case_string" | sed 's/,/,/g' | sed 's/^/[ /; s/$/ ]/' | sed 's/ //g')
-            echo "Formatted JSON array: $json_array" # Debugging output
             echo "testIDs=$json_array" >> "$GITHUB_OUTPUT"
-          else
-            # Extract IDs from the JSON file using jq
-            ids=$(jq -r '[.performanceTests[].id | tonumber] | join(",")' testcases.json)
-            # Set the output for the job
+          elif [ "${{ github.event.inputs.runSpecific }}" = "Pre-Order Functional" ]; then
+            ids=$(jq -r '[.preOrderFunctional[].id | tonumber] | join(",")' testcases.json)
+            echo "testIDs=[$ids]" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.inputs.runSpecific }}" = "Order Functional" ]; then
+            ids=$(jq -r '[.orderFunctional[].id | tonumber] | join(",")' testcases.json)
+            echo "testIDs=[$ids]" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.inputs.runSpecific }}" = "Post-Order Functional" ]; then
+            ids=$(jq -r '[.postOrderFunctional[].id | tonumber] | join(",")' testcases.json)
+            echo "testIDs=[$ids]" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.inputs.runSpecific }}" = "All OCC APIs" ]; then
+            ids=$(jq -r '[.allOCCAPIs[].id | tonumber] | join(",")' testcases.json)
+            echo "testIDs=[$ids]" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.inputs.runSpecific }}" = "All OData APIs" ]; then
+            ids=$(jq -r '[.allODataAPIs[].id | tonumber] | join(",")' testcases.json)
+            echo "testIDs=[$ids]" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.inputs.runSpecific }}" = "All Functional" ]; then
+            ids=$(jq -r '[.preOrderFunctional[].id, .orderFunctional[].id, .postOrderFunctional[].id | tonumber] | join(",")' testcases.json)
             echo "testIDs=[$ids]" >> "$GITHUB_OUTPUT"
           fi
   print_test_ids:
