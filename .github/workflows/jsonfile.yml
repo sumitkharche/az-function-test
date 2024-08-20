@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Report
-          path: testcases.json
+          path: ./testcases.json
   performance_testing_all:
     name: All
     runs-on: ubuntu-latest
