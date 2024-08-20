@@ -1,10 +1,22 @@
 {
-  "performanceTests": [
+  "preOrderFunctional": [
     {"id": "1", "name": "Test Case 1"},
-    {"id": "2", "name": "Test Case 2"},
+    {"id": "2", "name": "Test Case 2"}
+  ],
+  "orderFunctional": [
     {"id": "3", "name": "Test Case 3"},
-    {"id": "4", "name": "Test Case 4"},
+    {"id": "4", "name": "Test Case 4"}
+  ],
+  "postOrderFunctional": [
     {"id": "5", "name": "Test Case 5"},
     {"id": "6", "name": "Test Case 6"}
+  ],
+  "allOCCAPIs": [
+    {"id": "7", "name": "Test Case 7"},
+    {"id": "8", "name": "Test Case 8"}
+  ],
+  "allODataAPIs": [
+    {"id": "9", "name": "Test Case 9"},
+    {"id": "10", "name": "Test Case 10"}
   ]
 }
