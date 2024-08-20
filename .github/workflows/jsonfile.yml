@@ -19,12 +19,6 @@ jobs:
           ids=$(jq -r '[.performanceTests[].id | tonumber] | join(",")' testcases.json)
           # Set the output for the job
           echo "ids=[$ids]" >> $GITHUB_OUTPUT
-          
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: Report
-          path: testcases.json
 
   print-ids:
     runs-on: ubuntu-latest
@@ -33,7 +27,14 @@ jobs:
       - name: Print extracted IDs
         run: | 
           echo "Extracted IDs: ${{ needs.extract-ids.outputs.ids }}"
-  
+  up-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Report
+          path: testcases.json
   performance_testing_all:
     name: All
     runs-on: ubuntu-latest
