@@ -38,7 +38,7 @@ jobs:
         with:
           name: Report
           path: ./testfolder
-      - name: Output artifact ID
+      - name: Output artifact url
         run:  echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-url }}'
   performance_testing_all:
     name: All
