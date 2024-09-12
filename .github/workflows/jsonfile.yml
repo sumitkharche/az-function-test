@@ -33,6 +33,14 @@ on:
           - RECREATE     
 
 jobs:
+  workflow-started:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Workflow Startet Notification to Teams
+        run: |
+            curl -X POST -H "Content-Type: application/json" --data '{
+            "text": "ENV:D1 <br><br> Build is Started <br><br> Check out the HTML file in the artifacts of this run: https://github.com/sumitkharche/az-function-test/actions/runs/'${{github.run_id}}'"}' https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf
+                
   extract-ids:
     runs-on: ubuntu-latest
     outputs:
@@ -93,3 +101,11 @@ jobs:
       
       - name: Wait before starting test
         run: sleep 2 
+  workflow-end:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Workflow Ended Notification to Teams
+        run: |
+            curl -X POST -H "Content-Type: application/json" --data '{
+            "text": "ENV:D1 <br><br> Build is Completed <br><br> Check out the HTML file in the artifacts of this run: https://github.com/sumitkharche/az-function-test/actions/runs/'${{github.run_id}}'"}' https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf
+  
