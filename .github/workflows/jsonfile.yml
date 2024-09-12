@@ -46,6 +46,11 @@ jobs:
           echo "deploymentMode : ${{ github.event.inputs.deploymentMode }}"   
           payload='{"buildCode": ${{ github.event.inputs.buildNo }}, "databaseUpdateMode": "${{github.event.inputs.platformUpdate}}", "environmentCode": "'"$environmentCode"'", "strategy": "${{github.event.inputs.deploymentMode}}"}';
           echo "Payload: $payload"
+      - name: Share HTML file to Teams
+        run: |
+            curl -X POST -H "Content-Type: application/json" --data '{
+            "text": "ENV:TEST <br><br> Download the report by clicking on the URL: ddd. <br><br> Check out the HTML file in the artifacts of this run: https://github.com/sumitkharche/az-function-test/actions/runs/'${{github.run_id}}'"}' https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf
+          
 
       - name: Read testcases.json and extract IDs
         id: extract
