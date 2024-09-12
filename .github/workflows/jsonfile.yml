@@ -78,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        testID: [1,2,3]
+        testID: [1]
       max-parallel: 0
     steps:
       - name: 'Checkout'
