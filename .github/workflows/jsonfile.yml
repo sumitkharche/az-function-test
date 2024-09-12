@@ -42,8 +42,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Print Inputs
         run: |
-          echo "platformUpdate: ${{env.platformUpdate}}"
-          echo "deploymentMode : ${{ env.deploymentMode }}"    
+          echo "platformUpdate: ${{github.event.inputs.platformUpdate}}"
+          echo "deploymentMode : ${{ github.event.inputs.deploymentMode }}"    
 
       - name: Read testcases.json and extract IDs
         id: extract
