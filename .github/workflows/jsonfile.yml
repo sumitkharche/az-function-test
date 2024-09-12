@@ -2,6 +2,35 @@ name: Extract and Print Test Case IDs
 
 on:
   workflow_dispatch:
+   inputs:
+      buildStep:
+        description: 'Build/Deploy:'
+        required: true
+        default: 'deploy'
+        type: choice
+        options:
+          - build
+          - deploy
+      buildNo:
+        description: 'Build No:'
+        required: false
+        type: string
+      platformUpdate:
+        description: 'Select when Build Step is Deploy. Platform Update: No Migration (NONE), Migration (UPDATE)'
+        required: false
+        default: 'UPDATE'
+        type: choice
+        options:
+          - UPDATE
+          - NONE
+      deploymentMode:
+        description: 'Select Deployment Mode when Build Step is Deploy'
+        required: false
+        default: 'ROLLING_UPDATE'
+        type: choice
+        options:
+          - ROLLING_UPDATE
+          - RECREATE     
 
 jobs:
   extract-ids:
@@ -11,6 +40,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Print Inputs
+        run: |
+          echo "platformUpdate: ${{env.platformUpdate}}"
+          echo "deploymentMode : ${{ env.deploymentMode }}"    
 
       - name: Read testcases.json and extract IDs
         id: extract
