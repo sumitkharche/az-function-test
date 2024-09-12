@@ -43,7 +43,9 @@ jobs:
       - name: Print Inputs
         run: |
           echo "platformUpdate: ${{github.event.inputs.platformUpdate}}"
-          echo "deploymentMode : ${{ github.event.inputs.deploymentMode }}"    
+          echo "deploymentMode : ${{ github.event.inputs.deploymentMode }}"   
+          payload='{"buildCode": ${{ github.event.inputs.buildNo }}, "databaseUpdateMode": "${{github.event.inputs.platformUpdate}}", "environmentCode": "'"$environmentCode"'", "strategy": "${{github.event.inputs.deploymentMode}}"}';
+          echo "Payload: $payload"
 
       - name: Read testcases.json and extract IDs
         id: extract
