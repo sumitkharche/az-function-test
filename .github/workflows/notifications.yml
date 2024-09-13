@@ -1,0 +1,114 @@
+## Workflow for building and deploying into SAP Commerce cloud CCV2 dev 
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  BUILD_NAME:  D1.BUILD.$(date +'%Y.%m.%d.%H.%M')
+  DATABASE_UPDATE_MODE: UPDATE
+  DEPLOYMENT_STRATEGY: ROLLING_UPDATE
+  ENVIRONMENT_CODE: d1
+name: 'DEVELOP BUILD'
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      buildStep:
+        description: 'Build/Deploy:'
+        required: true
+        default: 'deploy'
+        type: choice
+        options:
+          - build
+          - deploy
+      buildNo:
+        description: 'Build No:'
+        required: false
+        type: string
+      platformUpdate:
+        description: 'Select when Build Step is Deploy. Platform Update: NONE (No Migration), UPDATE (Migration)'
+        required: false
+        default: 'UPDATE'
+        type: choice
+        options:
+          - UPDATE
+          - NONE
+      deploymentMode:
+        description: 'Select Deployment Mode when Build Step is Deploy'
+        required: false
+        default: 'ROLLING_UPDATE'
+        type: choice
+        options:
+          - ROLLING_UPDATE
+          - RECREATE      
+jobs:
+  notification-start:
+    name: Notify Teams (Pipeline Start)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send notification to Microsoft Teams (Start)
+        run: |
+           curl -X POST -H "Content-Type: application/json" --data '{
+            "text": "ENV:D1 <br><br> Build is Started <br><br> Check out the HTML file in the artifacts of this run: https://github.com/sumitkharche/az-function-test/actions/runs/'${{github.run_id}}'"}' https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf
+
+  VALIDATION:
+    if: ${{github.event_name == 'push'}}
+    name: VALIDATION
+    runs-on: ubuntu-latest
+    needs: notification-start
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: INTEGRATION TESTING (MOCK)
+        run: |
+          echo "Run your integration tests(mock) here!"
+      - name: Wait 10 sec
+        run: sleep 10          
+  SAPCOM_BUILD:
+    if: ${{github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.buildStep == 'build')}}
+    name: BUILD
+    runs-on: ubuntu-latest
+    environment: 'dev'
+    needs: VALIDATION
+    steps:
+      - name: Create Build
+        run: |
+          echo "URL: ${{env.BRANCH_NAME}}"
+      - name: Wait 10 sec
+        run: sleep 10            
+  SAPCOM_DEPLOY:
+    if: ${{github.event_name == 'workflow_dispatch' && github.event.inputs.buildStep == 'deploy' && github.event.inputs.buildNo != ''}}
+    name: DEPLOY
+    runs-on: ubuntu-latest
+    environment: 'dev'
+    steps:    
+      - name: Create Deployment
+        run: |
+         echo "URL: ${{env.BRANCH_NAME}}"
+      - name: Wait 10 sec
+        run: sleep 10           
+  INTEGRATION_E2E:
+    name: INTEGRATION TESTING (E2E)
+    runs-on: ubuntu-latest
+    needs: SAPCOM_DEPLOY
+    steps:    
+      - name: INTEGRATION TESTING (E2E)
+        run: |
+          echo "Run your integration tests(E2E) here!" 
+  REGRESSION:
+    name: REGRESSION TESTING
+    runs-on: ubuntu-latest
+    needs: INTEGRATION_E2E
+    steps:    
+      - name: REGRESSION TESTING (E2E)
+        run: |
+          echo "Run your REGRESSION tests(E2E) here!" 
+  notification-end:
+    name: Notify Teams (Pipeline End)
+    runs-on: ubuntu-latest
+    needs: [SAPCOM_BUILD, REGRESSION]  # Adjust depending on your needs
+    steps:
+      - name: Send notification to Microsoft Teams (End)
+        run: |
+           curl -X POST -H "Content-Type: application/json" --data '{
+            "text": "ENV:D1 <br><br> Build is Completed <br><br> Check out the HTML file in the artifacts of this run: https://github.com/sumitkharche/az-function-test/actions/runs/'${{github.run_id}}'"}' https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf
