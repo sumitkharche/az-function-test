@@ -39,7 +39,15 @@ on:
         type: choice
         options:
           - ROLLING_UPDATE
-          - RECREATE      
+          - RECREATE    
+      failstep:
+        description: 'Fail deployment True/false'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'            
 jobs:
   notification-start:
     name: Notify Teams (Pipeline Start)
@@ -89,6 +97,7 @@ jobs:
         run: sleep 10
       # Add this step to intentionally fail the job
       - name: Simulate Failure (for testing)
+        if: ${{github.event.inputs.failstep == 'true'}}
         run: exit 1  # This will fail the job intentionally        
       # Add a failure notification step here
       - name: Notify Teams on Deployment Failure
