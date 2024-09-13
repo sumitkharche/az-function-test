@@ -44,6 +44,7 @@ jobs:
   notification-start:
     name: Notify Teams (Pipeline Start)
     runs-on: ubuntu-latest
+    if: ${{github.event_name == 'workflow_dispatch' && github.event.inputs.buildStep == 'deploy' && github.event.inputs.buildNo != ''}}
     steps:
       - name: Send notification to Microsoft Teams (Start)
         run: |
