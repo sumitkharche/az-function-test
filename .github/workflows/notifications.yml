@@ -74,9 +74,7 @@ jobs:
     steps:
       - name: Create Build
         run: |
-          echo "URL: ${{env.BRANCH_NAME}}"
-      - name: Wait 5 sec
-        run: sleep 5          
+          echo "URL: ${{env.BRANCH_NAME}}"         
   SAPCOM_DEPLOY:
     if: ${{github.event_name == 'workflow_dispatch' && github.event.inputs.buildStep == 'deploy' && github.event.inputs.buildNo != ''}}
     name: DEPLOY
@@ -88,7 +86,16 @@ jobs:
         run: |
          echo "URL: ${{env.BRANCH_NAME}}"
       - name: Wait 10 sec
-        run: sleep 10           
+        run: sleep 10
+      # Add this step to intentionally fail the job
+      - name: Simulate Failure (for testing)
+        run: exit 1  # This will fail the job intentionally        
+      # Add a failure notification step here
+      - name: Notify Teams on Deployment Failure
+        if: failure()  # Trigger this step only if the job fails
+        run: |
+          curl -X POST -H "Content-Type: application/json" --data '{
+           "text": "ENV:D1 <br><br> Deployment FAILED <br><br> Check out the HTML file in the artifacts of this run: https://github.com/sumitkharche/az-function-test/actions/runs/'${{github.run_id}}'"}' https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf        
   INTEGRATION_E2E:
     name: INTEGRATION TESTING (E2E)
     runs-on: ubuntu-latest
