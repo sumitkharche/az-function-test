@@ -97,7 +97,7 @@ jobs:
         if: ${{ success() }}  # Trigger this step only if the job fails
         run: |
           curl -X POST -H "Content-Type: application/json" --data '{
-           "text": "ENV:D1 <br><br> Deployment FAILED <br><br> Check out the HTML file in the artifacts of this run: https://github.com/sumitkharche/az-function-test/actions/runs/'${{github.run_id}}'"}' https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf        
+           "text": "ENV:D1 <br><br> Deployment Completed <br><br> Check out the HTML file in the artifacts of this run: https://github.com/sumitkharche/az-function-test/actions/runs/'${{github.run_id}}'"}' https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf        
       
       - name: Notify Teams on Deployment Failure
         if: ${{ failure() }}  # Trigger this step only if the job fails
