@@ -78,7 +78,6 @@ jobs:
     name: DEPLOY
     runs-on: ubuntu-latest
     environment: 'dev'
-    needs: notification-start
     steps:    
       - name: Send notification to Microsoft Teams (Start)
         run: |
