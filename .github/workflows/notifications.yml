@@ -65,7 +65,7 @@ jobs:
       - name: DateTime
         run: |
           current_time=$(TZ="America/Chicago" date +"%Y-%m-%d %H:%M:%S CST")
-          echo "current_time = ${{current_time}}"
+          echo "current_time = $current_time"
           echo "{date}={$(date)}"          
       - name: Send notification to Microsoft Teams (Start)
         run: |
