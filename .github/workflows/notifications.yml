@@ -72,7 +72,7 @@ jobs:
       - name: Send notification to Microsoft Teams (Start)
         run: |
            curl -X POST -H "Content-Type: application/json" --data '{
-            "text": "Time: $current_time <br>Trigger By: ${{github.actor}} <br>ENV:D1 <br><br> Validation is Started <br><br> Check out the HTML file in the artifacts of this run: https://github.com/sumitkharche/az-function-test/actions/runs/'${{github.run_id}}'"}' https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf
+            "text": "Time: ${{current_time}} <br>Trigger By: ${{github.actor}} <br>ENV:D1 <br><br> Validation is Started <br><br> Check out the HTML file in the artifacts of this run: https://github.com/sumitkharche/az-function-test/actions/runs/'${{github.run_id}}'"}' https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf
               
       - name: INTEGRATION TESTING (MOCK)
         run: |
