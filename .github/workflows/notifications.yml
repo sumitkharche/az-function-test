@@ -64,10 +64,10 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Send start notification
         run: |
-          chmod +x ./end_teams_notification.sh
+          chmod +x ./send_teams_notification.sh
           current_time=$(TZ="America/Chicago" date +"%Y-%m-%d %H:%M:%S CST")
           current_time_ist=$(TZ="Asia/Kolkata" date +"%Y-%m-%d %H:%M:%S IST")
-          ./end_teams_notification.sh "Deployment Started" "DEV" "$current_time" "$current_time_ist" "${{ github.actor }}" "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" "https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf" "YOUR_USER_ID_HERE"          
+          ./send_teams_notification.sh "Deployment Started" "DEV" "$current_time" "$current_time_ist" "${{ github.actor }}" "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" "https://webhook-test.com/46fcde0069fc598bc1cf69b69778f3cf" "YOUR_USER_ID_HERE"          
       - name: DateTime
         run: |
           current_time=$(TZ="America/Chicago" date +"%Y-%m-%d %H:%M:%S CST")
